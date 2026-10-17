@@ -28,10 +28,30 @@ Hay que abrirlo con un servidor local (con doble clic en `index.html` el navegad
 - Guardado: `localStorage`, clave `ashfall_v2`.
 - Biomas: Claros, Bosque Oscuro, Pantano, Montaña. Jefe: Guardián de Raíces.
 
-## Sprites
-- Carpeta `sprites/`, nombres `<grupo>_<elemento>_<n>.png` (ej. `spx_abeto_0.png`, `newspx_roca_3.png`, `wsrc_hacha_0.png`). Los grupos coinciden con las variables de `game.js`.
-- Cada entrada de `SPX`/`NEWSPX` es `[ruta, ancho, alto, escala]`; los árboles de `NA` llevan `[ruta, ancho, alto]` (p. ej. roble 205×360).
-- El arte se genera con Pixellab.ai. Si se cambia un sprite, mantener su tamaño en píxeles o actualizar las medidas en `game.js`.
+## Sprites (organizados en carpetas)
+Todos los sprites están en `sprites/`, agrupados por tipo y, cuando aplica, por bioma o material. Los nombres de archivo no cambian: solo se mueven.
+- `player/` — `sin_armadura/` (hoja de carrera, `spr_0.png`), `ataques/` (`pun_0.png`), `comer/` (`eat_0.png`). Las armaduras irán en `player/armaduras/<tipo>/`.
+- `armas/` — `basicas/` (espada, garrote, hacha, lanza, martillo, pico), `cobre/` (lanza de cobre), `escudos/`. Nuevos materiales: `armas/<material>/`.
+- `animales/` — `jabali/`, `lobo/`. Nuevos animales: `animales/<nombre>/`.
+- `arboles/` — `claros/`, `bosque_oscuro/`, `pantano/`, `otros/abedul/`.
+- `recursos/` — `arbustos/`, `ramas/`, `troncos/`, `rocas/`, `piedras/`, `tocones/claros/` y `tocones/bosque_oscuro/`.
+- `construccion/` — `paredes/madera/`, `suelos/madera/`, `puertas/madera/` (hoja y marco), `ventanas/madera/`. Nuevos materiales: `<tipo>/piedra/`, etc.
+- `construibles/` — `estaciones/banco_de_trabajo/`.
+- `jefes/` — `guardian_de_raices/`.
+- `efectos/` — `sangre/` (manchas permanentes).
+- `terrenos/` — `claros/`, `bosque_oscuro/`, `pantano/` (texturas del suelo).
+
+Las rutas están escritas a mano en `js/game.js` (por ejemplo `"sprites/arboles/claros/spx_pradera_0.png"`). **Al mover o renombrar un sprite hay que actualizar también esa ruta en el código**, o el juego dejará de mostrarlo.
+Cada entrada de `SPX`/`NEWSPX`/`NA` lleva `[ruta, ancho, alto, escala]`; los árboles de `NA` llevan `[ruta, ancho, alto]`.
+El arte se genera con Pixellab.ai. Si se cambia un sprite, mantener su tamaño en píxeles o actualizar las medidas en `game.js`.
+Nunca volver a incrustar imágenes en base64 dentro del código.
+
+## Texturas del terreno
+- `sprites/terrenos/claros/texs_0.jpeg` (480×480) = hierba del bioma **Claros**; `sprites/terrenos/bosque_oscuro/texs_1.jpeg` (512×512) = **Bosque Oscuro**; `sprites/terrenos/pantano/img_pantanot_0.jpeg` (512×512) = **Pantano**. Se cargan en `TEXS` (línea `const TEXS=[...]`); `TW` regula cuánto se repite cada una.
+- Deben ser **sin costuras** (se repiten en mosaico) y dibujadas **vistas desde arriba**: el juego las deforma él mismo a la proyección isométrica.
+- No incluir sombreado de altura: el juego genera solo 5 variantes de brillo según el relieve (`GR`).
+- Otros terrenos (montaña, arena, nieve, agua…) usan colores planos (`TILECOL`) y no tienen textura; añadir uno nuevo requiere tocar `game.js`.
+- Para cambiar una textura: reemplazar el archivo manteniendo el nombre y la extensión, recargar con Ctrl+F5 y comprobar el resultado.
 
 ## Reglas de diseño (decididas por el usuario)
 - Personaje tipo **gladiador**, siempre a la misma velocidad: solo animación de **correr en 8 direcciones** (sin caminar). Inicia en taparrabos; la armadura es un segundo aspecto.
